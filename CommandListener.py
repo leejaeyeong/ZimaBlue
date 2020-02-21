@@ -6,7 +6,7 @@ from NoticeCrowler import NoticeCrowler
 from CafeteriaCrowler import CafeteriaCrowler
 
 
-token = ''
+token = 'xoxb-944330254352-947046696531-jZ9DI3wdBReU2sMNk3SdsTtC'
 slack = Slacker(token)
 
 cafeteriaUrl = 'https://coop.koreatech.ac.kr/dining/menu.php'
@@ -25,9 +25,7 @@ if command == '학식' :
     soup = BeautifulSoup(req.content.decode('euc-kr','replace'),'html.parser')
 
     x = CafeteriaCrowler(cafeteriaUrl, soup, slack)
-    x.bringData()
-    x.formatData()
-    x.sendData()
+    x.bringData().formatData().sendData()
 
 elif command == '공지' :
     req = requests.get(generalNoticUrl)

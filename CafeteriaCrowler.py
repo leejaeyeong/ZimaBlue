@@ -34,6 +34,7 @@ class CafeteriaCrowler :
                             self.todayDiet[kind].append(i)
                     if self.todayDiet[kind][0] != '\xa0':
                         self.todayDiet[kind].append(i)
+        return self
 
     def formatData(self) :
         time = ['   ==== 아침 메뉴 ====','   ==== 점심 메뉴 ====','   ==== 저녁 메뉴 ====']
@@ -60,6 +61,7 @@ class CafeteriaCrowler :
                 if len(j) > 2:
                     self.Message += '\n'+' '*5 + j
             self.Message += '\n' + '￣'*16 + '\n\n'
+        return self
 
         
     def sendData(self) :
