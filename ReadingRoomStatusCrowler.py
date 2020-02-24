@@ -1,16 +1,24 @@
 from selenium import webdriver
-import os 
+
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('headless')
+chrome_options.add_argument('--disable-gpu')
+chrome_options.add_argument('lang=ko_KR')
+
 # Create a new cromedriver
+driver = webdriver.Chrome('./chromedriver.exe',chrome_options=chrome_options)
+#driver.implicitly_wait(3)
 
-driver = webdriver.Chrome('./chromedriver.exe')
-driver.implicitly_wait(3)
-# Go to www.google.com
-driver.get("https://lib.koreatech.ac.kr/#/")
-# Saves a .png file with name my_screenshot_name to the directory that
-# you are running the program from.
-screenshot_name = "my_screenshot_name.png"
+#full size
+driver.set_window_position(0, 0)
+driver.set_window_size(1920, 1080)
+driver.get("http://220.68.79.34/EZ5500/SEAT/ROOMSTATUS.ASPX") # 열람실 현황 조회 
+
+
+screenshot_name = 'reading_room_status.png'
 driver.save_screenshot(screenshot_name)
+driver.quit()
 
-
-# ver80 이상에서 동작 
-#https://chromedriver.chromium.org/downloads
+# webdriver는 Chrome ver >= 80 에서 동작한다.  
+# https://chromedriver.chromium.org/downloads

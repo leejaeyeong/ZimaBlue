@@ -7,7 +7,7 @@ from NoticeCrowler import NoticeCrowler
 from CafeteriaCrowler import CafeteriaCrowler
 
 
-token = 'xoxb-944330254352-947046696531-azflt1u5vlMrDf3tPSKpUoyG'
+token = ''
 slack = Slacker(token)
 
 cafeteriaUrl = 'https://coop.koreatech.ac.kr/dining/menu.php'
