@@ -38,16 +38,16 @@ def event_handler(event_type, slack_event):
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
     
-            x = NoticeCrowler(generalNoticUrl, soup, slack)
-            x.sendData()
+            notice = NoticeCrowler(generalNoticUrl, soup, slack)
+            notice.sendData()
         
         elif '학식' in userMessage :
             req = requests.get(cafeteriaUrl)
             html = req.text
             soup = BeautifulSoup(req.content.decode('euc-kr','replace'),'html.parser')
 
-            x = CafeteriaCrowler(cafeteriaUrl, soup, slack)
-            x.bringData().formatData().sendData()
+            cafeteria = CafeteriaCrowler(cafeteriaUrl, soup, slack)
+            cafeteria.bringData().formatData().sendData()
             
 
         elif '안녕' in userMessage :
