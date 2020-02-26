@@ -7,26 +7,25 @@ bachelorNoticUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/bachelorList.d
 noticeNumTag = '#board-wrap > div.board-list-wrap > table > tbody > tr:nth-child(2) > td.num'
 noticeTitleTag = '#board-wrap > div.board-list-wrap > table > tbody > tr > td.subject > a > span'
 
-class NoticeCrowler :
-    def __init__(self,url, soup, slack):
-        self.url = url 
+class NoticeCrawler :
+    def __init__(self, soup, slack):
         self.soup = soup 
         self.slack = slack
         self.Message = ''
         self.selector = None
     
-    def bringData(self) :
+    def crawling(self) :
         self.selector = self.soup.select(noticeTitleTag)
 
-    def sendData(self) :
+    def getAnswer(self) :
         if self.selector == None :
-            self.bringData()
+            self.crawling()
 
         notice = ''
         for instance in self.selector:
             notice += instance.text + '\n'
 
-        return self.slack.chat.post_message('#jbot_test', notice)
+        return notice
 
 
 
