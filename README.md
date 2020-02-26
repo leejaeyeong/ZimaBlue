@@ -3,6 +3,6 @@
 #### config.json
 ```  
 {
-    "Bot Toekn" : "your token"
+    "Bot Token" : "your token"
 }  
 ```
