@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Config file 
+config.json
+
+# local test environment
+slacktest.py
+
 # C extensions
 *.so
 

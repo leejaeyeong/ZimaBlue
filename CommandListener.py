@@ -6,8 +6,10 @@ from flask import Flask, request, make_response
 from NoticeCrowler import NoticeCrowler
 from CafeteriaCrowler import CafeteriaCrowler
 
+token = ''
+with open('config.json') as json_file:
+    token = json.load(json_file)["Bot Token"]
 
-token = 'xoxb-944330254352-947046696531-azflt1u5vlMrDf3tPSKpUoyG'
 slack = Slacker(token)
 
 cafeteriaUrl = 'https://coop.koreatech.ac.kr/dining/menu.php'
@@ -38,16 +40,16 @@ def event_handler(event_type, slack_event):
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
     
-            x = NoticeCrowler(generalNoticUrl, soup, slack)
-            x.sendData()
+            Notice = NoticeCrowler(generalNoticUrl, soup, slack)
+            Notice.sendData()
         
         elif '학식' in userMessage :
             req = requests.get(cafeteriaUrl)
             html = req.text
             soup = BeautifulSoup(req.content.decode('euc-kr','replace'),'html.parser')
 
-            x = CafeteriaCrowler(cafeteriaUrl, soup, slack)
-            x.bringData().formatData().sendData()
+            Cafeteria = CafeteriaCrowler(cafeteriaUrl, soup, slack)
+            Cafeteria.bringData().formatData().sendData()
             
 
         elif '안녕' in userMessage :
@@ -88,8 +90,6 @@ if __name__ == '__main__':
 
 
 """ 
-
-
 print('명령 입력 : ', end = ' ')
 command = input()
 
@@ -111,5 +111,4 @@ elif command == '공지' :
 
 else :
     pass
-
  """
