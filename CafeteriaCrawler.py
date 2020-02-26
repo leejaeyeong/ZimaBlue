@@ -6,16 +6,15 @@ facultyFoodTag = 'body > div > div > table > tr:nth-child({}) > td:nth-child(6)'
 foodType = {0:koreanFoodTag, 1:specialFoodTag, 2:onedishFoodTag, 3:westernFoodTag, 4:facultyFoodTag}
 foodTitle = {0:':rice: *한식* :rice:', 1:':curry: *일품식* :curry:', 2:':shallow_pan_of_food: *전골* :shallow_pan_of_food:', 3:':hamburger: *양식* :hamburger:', 4:':bento: *능수관* :bento:'}
 
-class CafeteriaCrowler :
+class CafeteriaCrawler :
     
-    def __init__(self,url, soup, slack):
-        self.url = url 
+    def __init__(self, soup, slack):
         self.soup = soup 
         self.slack = slack
         self.todayDiet = []
         self.Message = ''
 
-    def bringData(self) :
+    def crawling(self) :
         koreafood = []
         specialfood = []
         onedishfood = []
@@ -64,8 +63,8 @@ class CafeteriaCrowler :
         return self
 
         
-    def sendData(self) :
-        return self.slack.chat.post_message('#jbot_test', self.Message)
+    def getAnswer(self) :
+        return self.Message
 
 
 
