@@ -3,24 +3,23 @@ import requests
 from bs4 import BeautifulSoup
 from slacker import Slacker
 from flask import Flask, request, make_response
-from NoticeCrowler import NoticeCrowler
-from CafeteriaCrowler import CafeteriaCrowler
+from NoticeCrawler import NoticeCrawler
+from CafeteriaCrawler import CafeteriaCrawler
 
-token = ''
+slack = None
 with open('config.json') as json_file:
     token = json.load(json_file)["Bot Token"]
-
-slack = Slacker(token)
+    slack = Slacker(token)
 
 cafeteriaUrl = 'https://coop.koreatech.ac.kr/dining/menu.php'
-generalNoticUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/list.do?mCode=MN230'
-scholarshipNoticUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/scholarList.do?mCode=MN231'
-bachelorNoticUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/bachelorList.do?mCode=MN233'
+generalNoticeUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/list.do?mCode=MN230' # 일반공지
+scholarshipNoticeUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/scholarList.do?mCode=MN231' # 장학공지
+bachelorNoticeUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/bachelorList.do?mCode=MN233' # 학사공지
 
 app = Flask(__name__)
 
 def get_answer():
-    return "무슨 말인지 모르겠네요. "
+    return 
 
 
 # 이벤트 핸들하는 함수
@@ -36,26 +35,35 @@ def event_handler(event_type, slack_event):
         text = get_answer()
 
         if '공지' in userMessage :
-            req = requests.get(generalNoticUrl)
+            if '장학' in userMessage :
+                req = requests.get(scholarshipNoticeUrl)
+            elif '학사' in userMessage :
+                req = requests.get(bachelorNoticeUrl)
+            else :
+                req = requests.get(generalNoticeUrl)
+
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
     
-            Notice = NoticeCrowler(generalNoticUrl, soup, slack)
-            Notice.sendData()
+            Notice = NoticeCrawler(soup, slack)
+            text = Notice.getAnswer()
         
         elif '학식' in userMessage :
             req = requests.get(cafeteriaUrl)
             html = req.text
             soup = BeautifulSoup(req.content.decode('euc-kr','replace'),'html.parser')
 
-            Cafeteria = CafeteriaCrowler(cafeteriaUrl, soup, slack)
-            Cafeteria.bringData().formatData().sendData()
+            Cafeteria = CafeteriaCrawler(soup, slack)
+            text = Cafeteria.crawling().formatData().getAnswer()
             
 
         elif '안녕' in userMessage :
             text = '나는 *지마블루*. 진리를 쫓아 이곳까지 왔죠. \n시간이 얼마 남지 않았습니다. *이 활동이 저의 마지막이 될 것 입니다.*'
-            slack.chat.post_message(channel, text)
+        
+        else :
+            text = '무슨 말인지 몰라'
 
+        slack.chat.post_message(channel, text)
 
         return make_response("앱 멘션 메시지가 보내졌습니다.", 200, )
 
@@ -84,9 +92,6 @@ def hears():
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080)
-
-
-
 
 
 """ 
