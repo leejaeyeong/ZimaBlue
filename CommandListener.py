@@ -31,6 +31,7 @@ def event_handler(event_type, slack_event):
 
         userMessage = slack_event["event"]["blocks"][0]['elements'][0]['elements'][1]['text']
 
+        attachments_dict = dict()
 
         if '공지' in userMessage :
             if '장학' in userMessage :
@@ -45,7 +46,10 @@ def event_handler(event_type, slack_event):
     
 
             Notice = NoticeCrawler(soup, slack)
-            strZimaBlueAnswer = Notice.getAnswer()
+            attachments_dict['text'] =  Notice.getAnswer()
+            attachments_dict['text_link'] =  "www.naver.com" 
+
+
         
         elif '학식' in userMessage :
             req = requests.get(cafeteriaUrl)
@@ -54,20 +58,42 @@ def event_handler(event_type, slack_event):
 
 
             Cafeteria = CafeteriaCrawler(soup, slack)
-            strZimaBlueAnswer = Cafeteria.crawling().formatData().getAnswer()
+            attachments_dict['text'] = Cafeteria.crawling().formatData().getAnswer()
         
         elif '번역' in userMessage :
             pypapago = Translator()
-            strZimaBlueAnswer = '```'+pypapago.translate(userMessage[3:])+'```'
-            
+            attachments_dict['pretext'] = '*[번역] 파파고는 말한다. *:penguin:'
+            attachments_dict['text'] = '```'+pypapago.translate(userMessage[3:])+'```'
+            attachments_dict['mrkdwn_in'] = ["text", "pretext"]
 
         elif '안녕' in userMessage :
-            strZimaBlueAnswer = '나는 *지마블루*. 진리를 쫓아 이곳까지 왔죠. \n시간이 얼마 남지 않았습니다. *이 활동이 저의 마지막이 될 것 입니다.*'
-        
+            attachments_dict['text'] = '나는 *지마블루*:small_blue_diamond: 진리를 쫓아 이곳까지 왔죠. \n시간이 얼마 남지 않았습니다. *이 활동이 저의 마지막이 될 것 입니다.*'
         else :
-            strZimaBlueAnswer = '무슨 말인지 몰라'
+            attachments_dict['text'] = '무슨 말인지 모르겠네요..'
 
-        slack.chat.post_message(channel, strZimaBlueAnswer)
+        """ attachments_dict = dict()
+        attachments_dict['pretext'] = "attachments 블록 전에 나타나는 text"
+        attachments_dict['title'] = "다른 텍스트 보다 크고 볼드되어서 보이는 title"
+        attachments_dict['title_link'] = "https://corikachu.github.io"
+        attachments_dict['fallback'] = "클라이언트에서 노티피케이션에 보이는 텍스트 입니다. attachment 블록에는 나타나지 않습니다"
+        attachments_dict['text'] = "본문 텍스트! 5줄이 넘어가면 *show more*로 보이게 됩니다.\n1\n2\n3\n4\n5\n6\n7\n8\n9\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+        attachments_dict['mrkdwn_in'] = ["text", "pretext"]  # 마크다운을 적용시킬 인자들을 선택합니다.
+        attachments = [attachments_dict] """
+        #slack.chat.post_message(channel="#channel", text=None, attachments=attachments, as_user=True)
+
+
+        slack.chat.post_message(channel, attachments=[attachments_dict],as_user= True)
+
+        # Image attachments
+        """ [
+            {
+                "fallback": "Required plain-text summary of the attachment.",
+                "text": "Optional text that appears within the attachment",
+                "image_url": "https://mblogthumb-phinf.pstatic.net/MjAxNjEwMjJfNjAg/MDAxNDc3MTM5MDkzMTY5.nTQZS9VKPU3Y1P0J-nOcN4JMz75qU00n09XpQcGJZkAg.3fNACGwA3s_2TSRQxnY6sQDokClABM5fUumyIXAYdQUg.PNG.bugman1303/JW_T-Rex.png?type=w2"
+            }
+        ] """
+
+
 
         return make_response("앱 멘션 메시지가 보내졌습니다.", 200, )
 
