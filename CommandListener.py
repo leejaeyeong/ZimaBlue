@@ -32,19 +32,24 @@ def event_handler(event_type, slack_event):
         userMessage = slack_event["event"]["blocks"][0]['elements'][0]['elements'][1]['text']
 
         attachments_dict = dict()
+        attachments_dict['color'] = '#2398cf'
+        
 
         if '공지' in userMessage :
             if '장학' in userMessage :
                 req = requests.get(scholarshipNoticeUrl)
+                noticeType = '장학공지'
             elif '학사' in userMessage :
                 req = requests.get(bachelorNoticeUrl)
+                noticeType = '학사공지'
             else :
                 req = requests.get(generalNoticeUrl)
+                noticeType = '일반공지'
 
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
     
-            Notice = NoticeCrawler(soup, slack)
+            Notice = NoticeCrawler(soup, slack, noticeType)
             attachments_dict = Notice.crawling().getAnswer()
 
         elif '학식' in userMessage :
@@ -62,7 +67,7 @@ def event_handler(event_type, slack_event):
             attachments_dict['mrkdwn_in'] = ["text", "pretext"]
 
         elif '안녕' in userMessage :
-            attachments_dict['text'] = '나는 *지마블루*:small_blue_diamond: 진리를 쫓아 이곳까지 왔죠. \n시간이 얼마 남지 않았습니다. *이 활동이 저의 마지막이 될 것 입니다.*'
+            attachments_dict['text'] = '나는 *지마블루*:small_blue_diamond: 진리를 찾아 이곳까지 왔죠. \n시간이 얼마 남지 않았습니다. ~*이 활동이 저의 마지막이 될 것 입니다.*~'
         else :
             attachments_dict['text'] = '무슨 말인지 모르겠네요..'
             attachments_dict['file'] = './reading_room_status.png'

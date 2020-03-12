@@ -16,9 +16,10 @@ noticeTitleTag = '#board-wrap > div.board-list-wrap > table > tbody > tr'
 baseUrl = 'https://www.koreatech.ac.kr/'
 
 class NoticeCrawler :
-    def __init__(self, soup, slack):
+    def __init__(self, soup, slack, noticeType):
         self.soup = soup 
         self.slack = slack
+        self.noticeType = noticeType
         self.Message = ''
         self.postList = []
         self.selector = None
@@ -34,9 +35,10 @@ class NoticeCrawler :
         return self
 
     def getAnswer(self) :
+        post = ':loud_sound: *[{}]를 가져왔습니다.*\n'.format(self.noticeType)
         jsonData = OrderedDict()
+        jsonData['color'] = '#2398cf'
         jsonData['blocks'] = []
-        post = ''
         for i in range(len(self.postList)) :
             post += '<{}|{}>\n'.format(self.postList[i][0],self.postList[i][2])
         jsonData['blocks'].append({'type' :'section','text' : {'type' :'mrkdwn','text' : post }})
