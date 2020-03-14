@@ -5,6 +5,7 @@ from slacker import Slacker
 from flask import Flask, request, make_response
 from NoticeCrawler import NoticeCrawler
 from CafeteriaCrawler import CafeteriaCrawler
+from BusInfomationCrawler import BusInformation
 from pypapago import Translator
 
 
@@ -14,6 +15,7 @@ with open('config.json') as json_file:
     slack = Slacker(token)
 
 cafeteriaUrl = 'https://coop.koreatech.ac.kr/dining/menu.php'
+businformationUrl = 'https://hantalk.io/bus'
 generalNoticeUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/list.do?mCode=MN230' # 일반공지
 scholarshipNoticeUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/scholarList.do?mCode=MN231' # 장학공지
 bachelorNoticeUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/bachelorList.do?mCode=MN233' # 학사공지
@@ -65,6 +67,17 @@ def event_handler(event_type, slack_event):
             attachments_dict['pretext'] = '*[번역] 파파고는 말한다. *:penguin:'
             attachments_dict['text'] = '```'+pypapago.translate(userMessage[3:])+'```'
             attachments_dict['mrkdwn_in'] = ["text", "pretext"]
+        
+        elif '버스' or '고속' or '대성' in userMessage :
+            req = requests.get(businformationUrl)
+            html = req.text
+            soup = BeautifulSoup(html, 'html.parser')
+            BusInfo = BusInformation(soup, slack)
+            print(BusInfo.getNextBus())
+            attachments_dict['text'] = '버스요..'
+
+        elif '열람실' or '다산' in userMessage :
+            pass
 
         elif '안녕' in userMessage :
             attachments_dict['text'] = '나는 *지마블루*:small_blue_diamond: 진리를 찾아 이곳까지 왔죠. \n시간이 얼마 남지 않았습니다. ~*이 활동이 저의 마지막이 될 것 입니다.*~'

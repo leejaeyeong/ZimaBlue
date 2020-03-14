@@ -1,14 +1,4 @@
-import json
-import requests
-from bs4 import BeautifulSoup
-from slacker import Slacker
-from flask import Flask, request, make_response
 from collections import OrderedDict
-
-# 일반, 장학, 학사 공지 
-generalNoticUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/list.do?mCode=MN230'
-scholarshipNoticUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/scholarList.do?mCode=MN231'
-bachelorNoticUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/bachelorList.do?mCode=MN233'
 
 # 글 번호, 글 제목
 noticeTitleTag = '#board-wrap > div.board-list-wrap > table > tbody > tr'
