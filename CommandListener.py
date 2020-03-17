@@ -22,7 +22,6 @@ bachelorNoticeUrl = 'https://www.koreatech.ac.kr/kor/CMS/NoticeMgr/bachelorList.
 
 app = Flask(__name__)
 
-
 # 이벤트 핸들하는 함수
 
 def event_handler(event_type, slack_event):
@@ -74,6 +73,8 @@ def event_handler(event_type, slack_event):
             soup = BeautifulSoup(html, 'html.parser')
             BusInfo = BusInformation(soup, slack)
             print(BusInfo.getNextBus())
+            print(BusInfo.getOtherBus()[0])
+            print(BusInfo.getTimeToArrive())
             attachments_dict['text'] = '버스요..'
 
         elif '열람실' or '다산' in userMessage :
@@ -95,7 +96,8 @@ def event_handler(event_type, slack_event):
         attachments = [attachments_dict] """
         #slack.chat.post_message(channel="#channel", text=None, attachments=attachments, as_user=True)
 
-
+        # attchment 상태에 따랄 보내는 코드로. 
+        
         slack.chat.post_message(channel, attachments=[attachments_dict],as_user= True)
        
         # Image attachments
@@ -109,7 +111,7 @@ def event_handler(event_type, slack_event):
 
 
 
-        #return make_response("앱 멘션 메시지가 보내졌습니다.", 200, )
+        return make_response("앱 멘션 메시지가 보내졌습니다.", 200, )
 
     message = "[%s] 이벤트 핸들러를 찾을 수 없습니다." % event_type
 
