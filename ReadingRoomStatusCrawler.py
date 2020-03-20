@@ -18,6 +18,11 @@ driver.get("http://220.68.79.34/EZ5500/SEAT/ROOMSTATUS.ASPX") # 열람실 현황
 
 screenshot_name = 'reading_room_status.png'
 driver.save_screenshot(screenshot_name)
+images =  driver.find_elements_by_tag_name('table')
+
+for image in images:
+    print(image.get_attribute('tr'))
+
 driver.quit()
 
 # webdriver는 Chrome ver >= 80 에서 동작한다.  
