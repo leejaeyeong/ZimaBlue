@@ -41,27 +41,28 @@ with open('config.json') as json_file:
     token = json.load(json_file)["Bot Token"]
     slack = Slacker(token)
 
+req = requests.get('http://220.68.79.34/EZ5500/SEAT/ROOMSTATUS.ASPX')
 
-try :
-    req = requests.get('http://220.68.79.34/EZ5500/SEAT/ROOMSTATUS.ASPX')
-    html = req.text
-    soup = BeautifulSoup(html, 'html.parser')
-    Notice = NoticeCrawler(soup, slack)
-    xx = Notice.getAnswer().replace('\r','\n').replace('\n','').replace('1층','').replace('2층','').split(' ')
-except :
-    print('열람실 서버가 응답하지 않습니다.')
-    
+html = req.text
 
+soup = BeautifulSoup(html, 'html.parser')
+Notice = NoticeCrawler(soup, slack)
+xx = Notice.getAnswer().replace('\n','').replace('1층','').replace('2층','').split(' ')
 
 matrix = [[None for col in range(5)] for row in range(6)]
+print(len(matrix[0]))
 
+print(xx)
 
 row, col = 0,0
 for i in xx :
     if row == len(matrix) :
         break
-    if '' == i or '%' == i :
+    if '' == i or '%\r' == i :
         continue
+    
+    print(i)
+    print(row,col)
 
     if matrix[row][col] == None :
         matrix[row][col] = i
@@ -71,10 +72,8 @@ for i in xx :
         else :
             col += 1
 
+    
 
-print(matrix) 
+print(matrix)
 
-for i in range(len(matrix)) :
-    for j in range(len(matrix[i])) :
-        print(matrix[i][j],end = ' '*len(matrix[i][j])*3)
-    print()
+    
