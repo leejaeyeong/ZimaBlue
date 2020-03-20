@@ -11,10 +11,10 @@
    - [x] 장학 공지  
  - [x] 오늘의 학식 메뉴 
  - [x] 번역
- - [] 열람실 현황 조회
- - [] 대성고속 배차 시간  
+ - [ ] 열람실 현황 조회
+ - [ ] 대성고속 배차 시간  
 
-### 라이브러리 설치
+### Library install
 ```
 pip install requirements.txt
 ```
@@ -29,3 +29,4 @@ pip install requirements.txt
 ```
 
 
+![zima](https://media.giphy.com/media/5xtDarzqYMWFigufLws/giphy.gif)
