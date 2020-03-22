@@ -6,9 +6,8 @@ noticeTitleTag = '#board-wrap > div.board-list-wrap > table > tbody > tr'
 baseUrl = 'https://www.koreatech.ac.kr/'
 
 class NoticeCrawler :
-    def __init__(self, soup, slack, noticeType):
+    def __init__(self, soup, noticeType):
         self.soup = soup 
-        self.slack = slack
         self.noticeType = noticeType
         self.Message = ''
         self.postList = []

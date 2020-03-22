@@ -50,7 +50,7 @@ def event_handler(event_type, slack_event):
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
     
-            Notice = NoticeCrawler(soup, slack, noticeType)
+            Notice = NoticeCrawler(soup, noticeType)
             attachments_dict = Notice.crawling().getAnswer()
 
         elif '학식' in userMessage :
@@ -58,8 +58,8 @@ def event_handler(event_type, slack_event):
             html = req.text
             soup = BeautifulSoup(req.content.decode('euc-kr','replace'),'html.parser')
 
-            Cafeteria = CafeteriaCrawler(soup, slack)
-            attachments_dict['text'] = Cafeteria.crawling().formatData().getAnswer()
+            Cafeteria = CafeteriaCrawler(soup)
+            attachments_dict['text'] = Cafeteria.crawling().getAnswer()
         
         elif '번역' in userMessage :
             pypapago = Translator()
@@ -67,24 +67,17 @@ def event_handler(event_type, slack_event):
             attachments_dict['text'] = '```'+pypapago.translate(userMessage[3:])+'```'
             attachments_dict['mrkdwn_in'] = ["text", "pretext"]
         
-        elif '버스' or '고속' or '대성' in userMessage :
+        elif '버스' in userMessage or '대성' in userMessage:
             req = requests.get(businformationUrl)
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
-            BusInfo = BusInformation(soup, slack)
-            print(BusInfo.getNextBus())
-            print(BusInfo.getOtherBus()[0])
-            print(BusInfo.getTimeToArrive())
-            attachments_dict['text'] = '버스요..'
-
-        elif '열람실' or '다산' in userMessage :
-            pass
+            BusInfo = BusInformation(soup)
+            attachments_dict = BusInfo.crawling().getAnswer()
 
         elif '안녕' in userMessage :
             attachments_dict['text'] = '나는 *지마블루*:small_blue_diamond: 진리를 찾아 이곳까지 왔죠. \n시간이 얼마 남지 않았습니다. ~*이 활동이 저의 마지막이 될 것 입니다.*~'
         else :
             attachments_dict['text'] = '무슨 말인지 모르겠네요..'
-            attachments_dict['file'] = './reading_room_status.png'
 
         """ attachments_dict = dict()
         attachments_dict['pretext'] = "attachments 블록 전에 나타나는 text"

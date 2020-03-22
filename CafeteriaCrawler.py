@@ -8,9 +8,8 @@ foodTitle = {0:':rice: *한식* :rice:', 1:':curry: *일품식* :curry:', 2:':sh
 
 class CafeteriaCrawler :
     
-    def __init__(self, soup, slack):
+    def __init__(self, soup):
         self.soup = soup 
-        self.slack = slack
         self.todayDiet = []
         self.Message = ''
 
@@ -64,6 +63,8 @@ class CafeteriaCrawler :
 
         
     def getAnswer(self) :
+        if self.Message == '' :
+            self.formatData()
         return self.Message
 
 
